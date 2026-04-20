@@ -337,7 +337,7 @@
     <div class="client-box">
       <div class="client-tabs">
         <button class="client-tab active" onclick="switchTab('receive')">Receive Photos</button>
-        <button class="client-tab" onclick="switchTab('send')">Send Photos</button>
+        <button class="client-tab" id="send-tab-btn" onclick="requestSendAccess()">Send Photos</button>
       </div>
 
       <div class="tab-panel active" id="tab-receive">
@@ -416,6 +416,9 @@
       });
     });
     // Client portal tabs
+    // Password protection for Send Photos tab
+    var adminUnlocked = false;
+
     function switchTab(tab) {
       document.querySelectorAll('.client-tab').forEach(function(t, i) {
         t.classList.toggle('active', (i === 0 && tab === 'receive') || (i === 1 && tab === 'send'));
@@ -423,6 +426,60 @@
       document.getElementById('tab-receive').classList.toggle('active', tab === 'receive');
       document.getElementById('tab-send').classList.toggle('active', tab === 'send');
     }
+
+    function requestSendAccess() {
+      if (adminUnlocked) {
+        switchTab('send');
+        return;
+      }
+      document.getElementById('login-overlay').style.display = 'flex';
+      setTimeout(function() { document.getElementById('admin-password').focus(); }, 100);
+    }
+
+    function checkAdminPassword() {
+      var pw = document.getElementById('admin-password').value;
+      var err = document.getElementById('login-error');
+      // SHA-256 hash of your password — change STEWARDEDSHOTS_PW to your chosen password
+      // Current password hash is for: StewardedShots2024!
+      // To change, generate a new SHA-256 hash at: https://emn178.github.io/online-tools/sha256.html
+      var HASH = '4d6fc824d01662fc1f19727ed0f09a01d6874e44dcdf6cf7c6f4e2911db6ad7d';
+      sha256(pw).then(function(h) {
+        if (h === HASH) {
+          adminUnlocked = true;
+          document.getElementById('login-overlay').style.display = 'none';
+          document.getElementById('admin-password').value = '';
+          err.style.display = 'none';
+          switchTab('send');
+        } else {
+          err.style.display = 'block';
+          document.getElementById('admin-password').value = '';
+          document.getElementById('admin-password').focus();
+        }
+      });
+    }
+
+    function closeLoginOverlay() {
+      document.getElementById('login-overlay').style.display = 'none';
+      document.getElementById('admin-password').value = '';
+      document.getElementById('login-error').style.display = 'none';
+    }
+
+    async function sha256(message) {
+      var msgBuffer = new TextEncoder().encode(message);
+      var hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      var hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+    }
+
+    // Allow Enter key in password field
+    document.addEventListener('DOMContentLoaded', function() {
+      var pwField = document.getElementById('admin-password');
+      if (pwField) {
+        pwField.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') checkAdminPassword();
+        });
+      }
+    });
     // Success messages
     function showMsg(id) {
       var el = document.getElementById(id);
@@ -437,6 +494,22 @@
       });
     });
   </script>
+
+
+  <!-- Admin Login Overlay -->
+  <div id="login-overlay" style="display:none; position:fixed; inset:0; background:rgba(10,26,46,0.85); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:14px; padding:2rem 2.2rem; max-width:360px; width:90%; box-shadow:0 8px 32px rgba(10,26,46,0.25); text-align:center;">
+      <div style="font-family:'Playfair Display',serif; font-size:20px; color:#0a1a2e; font-weight:600; margin-bottom:0.3rem;">Photographer Login</div>
+      <div style="font-size:12px; color:#5a8aaa; margin-bottom:1.5rem; font-style:italic;">Send Photos access only</div>
+      <div style="margin-bottom:1rem;">
+        <label style="display:block; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#5a7a9a; margin-bottom:6px; text-align:left;">Password</label>
+        <input id="admin-password" type="password" placeholder="Enter your password" style="width:100%; padding:0.7rem 1rem; border:1px solid #b8d8f0; border-radius:8px; font-size:14px; background:#f5faff; color:#0a1a2e; font-family:Lato,sans-serif; outline:none; box-sizing:border-box;" />
+      </div>
+      <div id="login-error" style="display:none; background:#fde8e8; border:1px solid #f5a5a5; border-radius:8px; padding:0.6rem 1rem; font-size:13px; color:#c0392b; margin-bottom:1rem;">Incorrect password. Please try again.</div>
+      <button onclick="checkAdminPassword()" style="width:100%; background:#f5c842; color:#0a1a2e; border:none; padding:0.8rem; font-size:12px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; border-radius:3px; cursor:pointer; margin-bottom:0.75rem;">Unlock</button>
+      <button onclick="closeLoginOverlay()" style="width:100%; background:transparent; color:#5a8aaa; border:1px solid #b8d8f0; padding:0.7rem; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; border-radius:3px; cursor:pointer;">Cancel</button>
+    </div>
+  </div>
 
 </body>
 </html>
