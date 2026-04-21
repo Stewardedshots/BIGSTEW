@@ -6,7 +6,7 @@
   <title>StewardedShots – Sports Photography | Matthew 5:16</title>
   <meta name="description" content="StewardedShots – Christian sports photography. Letting the light shine through every frame. Matthew 5:16." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Lato:wght@300;400;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -91,6 +91,209 @@
     .section-title { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 600; color: #0a1a2e; margin-bottom: 0.5rem; }
     .section-verse { font-size: 13.5px; font-style: italic; color: #5a7a9a; margin-bottom: 2rem; font-family: 'Playfair Display', serif; line-height: 1.6; }
     .gold-divider { width: 42px; height: 2.5px; background: #f5c842; border-radius: 2px; margin-bottom: 1.2rem; }
+
+    /* ── PRICING CARDS ── */
+    .pricing-wrap {
+      --p-cream: #F7F4EF;
+      --p-ink: #1C1B18;
+      --p-ink-muted: #6B6860;
+      --p-ink-faint: #B0ADA6;
+      --p-gold: #B8882A;
+      --p-gold-light: #F0E4C8;
+      --p-white: #FFFFFF;
+      --p-border: rgba(28,27,24,0.12);
+      --p-border-strong: rgba(28,27,24,0.22);
+      background: var(--p-cream);
+      color: var(--p-ink);
+      font-family: 'DM Sans', sans-serif;
+      padding: 80px 24px;
+    }
+    .pricing-inner { max-width: 860px; margin: 0 auto; }
+    .pricing-wrap .section-eyebrow {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--p-gold); margin-bottom: 12px;
+    }
+    .pricing-wrap .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 400; color: var(--p-ink);
+      line-height: 1.2; margin-bottom: 14px;
+    }
+    .pricing-wrap .section-sub {
+      font-size: 15px; color: var(--p-ink-muted);
+      max-width: 480px; margin-bottom: 52px; line-height: 1.6;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px; align-items: stretch;
+    }
+    .p-card {
+      background: var(--p-white);
+      border: 0.5px solid var(--p-border);
+      border-radius: 12px;
+      padding: 36px 32px 32px;
+      display: flex; flex-direction: column;
+      gap: 20px; position: relative;
+    }
+    .p-card.featured { border: 1.5px solid var(--p-gold); }
+    .p-card .badge {
+      position: absolute; top: -13px; left: 32px;
+      background: var(--p-gold); color: var(--p-white);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 20px;
+    }
+    .p-card-header { display: flex; flex-direction: column; gap: 6px; }
+    .p-card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 400; color: var(--p-ink);
+    }
+    .p-card-price {
+      font-size: 36px; font-weight: 500;
+      color: var(--p-ink); letter-spacing: -0.02em;
+    }
+    .p-card-price span {
+      font-size: 16px; font-weight: 400; color: var(--p-ink-muted);
+    }
+    .p-card-desc {
+      font-size: 14px; color: var(--p-ink-muted); line-height: 1.65;
+    }
+    .p-divider { border: none; border-top: 0.5px solid var(--p-border); }
+    .p-includes-label {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--p-ink-faint); margin-bottom: 10px;
+    }
+    .p-includes-list {
+      list-style: none; display: flex; flex-direction: column; gap: 9px;
+      padding: 0; margin: 0;
+    }
+    .p-includes-list li {
+      font-size: 14px; color: var(--p-ink-muted);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .p-includes-list li::before {
+      content: ''; width: 5px; height: 5px;
+      border-radius: 50%; background: var(--p-gold); flex-shrink: 0;
+    }
+    .p-addon {
+      background: var(--p-gold-light);
+      border: 0.5px solid rgba(184,136,42,0.25);
+      border-radius: 8px; padding: 12px 16px;
+    }
+    .p-addon label {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; cursor: pointer;
+    }
+    .p-addon-left { display: flex; align-items: center; gap: 10px; }
+    .p-addon input[type="checkbox"] {
+      width: 16px; height: 16px; accent-color: var(--p-gold);
+      cursor: pointer; flex-shrink: 0;
+    }
+    .p-addon-text { font-size: 13px; color: var(--p-ink); font-weight: 500; }
+    .p-addon-text-sub { font-size: 12px; color: var(--p-ink-muted); margin-top: 1px; }
+    .p-addon-price {
+      font-size: 14px; font-weight: 500; color: var(--p-gold); white-space: nowrap;
+    }
+    .book-btn {
+      margin-top: auto; width: 100%; padding: 14px;
+      border-radius: 8px; font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      border: 1px solid var(--p-border-strong);
+      background: transparent; color: var(--p-ink);
+    }
+    .book-btn.primary {
+      background: var(--p-ink); color: var(--p-white); border-color: transparent;
+    }
+    .book-btn:hover { opacity: 0.82; }
+    .book-btn:active { transform: scale(0.98); }
+    .pricing-note {
+      margin-top: 36px; font-size: 13px;
+      color: var(--p-ink-faint); text-align: center;
+    }
+    .pricing-note a { color: var(--p-gold); text-decoration: none; }
+    .pricing-note a:hover { text-decoration: underline; }
+    @media (max-width: 480px) {
+      .pricing-wrap { padding: 56px 16px; }
+      .p-card { padding: 28px 22px 24px; }
+    }
+
+    /* ── Booking fallback modal (used when mailto has no handler) ── */
+    .pricing-wrap .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(28,27,24,0.45);
+      z-index: 200; align-items: center; justify-content: center; padding: 24px;
+    }
+    .pricing-wrap .modal-overlay.open { display: flex; }
+    .pricing-wrap .modal {
+      background: var(--p-white); border-radius: 12px;
+      padding: 36px 32px 32px; width: 100%; max-width: 460px;
+      display: flex; flex-direction: column; gap: 18px; position: relative;
+      font-family: 'DM Sans', sans-serif; color: var(--p-ink);
+    }
+    .pricing-wrap .modal-close {
+      position: absolute; top: 16px; right: 18px;
+      background: none; border: none; font-size: 20px;
+      color: var(--p-ink-faint); cursor: pointer; line-height: 1; padding: 4px;
+    }
+    .pricing-wrap .modal-close:hover { color: var(--p-ink); }
+    .pricing-wrap .modal-eyebrow {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--p-gold);
+    }
+    .pricing-wrap .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; font-weight: 400; color: var(--p-ink); margin-top: -8px;
+    }
+    .pricing-wrap .modal-pkg-summary {
+      background: var(--p-cream); border-radius: 8px;
+      padding: 12px 16px; font-size: 13px; color: var(--p-ink-muted); line-height: 1.6;
+    }
+    .pricing-wrap .modal-pkg-summary strong { color: var(--p-ink); font-weight: 500; }
+    .pricing-wrap .field { display: flex; flex-direction: column; gap: 6px; }
+    .pricing-wrap .field label {
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--p-ink-muted);
+    }
+    .pricing-wrap .field input,
+    .pricing-wrap .field textarea {
+      font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--p-ink);
+      background: var(--p-white); border: 0.5px solid var(--p-border-strong);
+      border-radius: 8px; padding: 10px 14px; outline: none;
+      transition: border-color 0.15s; resize: none;
+    }
+    .pricing-wrap .field input:focus,
+    .pricing-wrap .field textarea:focus { border-color: var(--p-gold); }
+    .pricing-wrap .modal-submit {
+      width: 100%; padding: 14px; border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+      cursor: pointer; background: var(--p-ink); color: var(--p-white);
+      border: none; transition: opacity 0.15s, transform 0.1s;
+    }
+    .pricing-wrap .modal-submit:hover { opacity: 0.82; }
+    .pricing-wrap .modal-submit:active { transform: scale(0.98); }
+    .pricing-wrap .modal-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .pricing-wrap .modal-error {
+      font-size: 13px; line-height: 1.5; color: #8a2a2a;
+      background: #fdecec; border: 1px solid #f3b9b9; border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .pricing-wrap .modal-success { display: none; text-align: center; padding: 24px 0 8px; }
+    .pricing-wrap .modal-success-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--p-gold-light);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px; font-size: 20px;
+    }
+    .pricing-wrap .modal-success p { font-size: 14px; color: var(--p-ink-muted); line-height: 1.6; }
+    .pricing-wrap .modal-success strong {
+      display: block; font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 400; color: var(--p-ink); margin-bottom: 8px;
+    }
 
     /* ── GALLERY ── */
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -340,22 +543,112 @@
 
 
   <!-- PRICING -->
-  <section class="section section-dark" id="pricing" style="background:#0d2040;">
-    <div class="section-subtitle" style="color:#f5c842;">Pricing</div>
-    <div class="section-title" style="color:#f5e9cc;">Simple, honest packages</div>
-    <div class="gold-divider"></div>
-    <div style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:1rem;">
-      <div style="background:#0a1a2e; border:1.5px solid #f5c842; border-radius:14px; padding:1.8rem 2rem; min-width:180px;">
-        <div style="font-family:'Playfair Display',serif; font-size:32px; font-weight:600; color:#f5c842;">$25</div>
-        <div style="font-size:14px; color:#e3f1ff; margin-top:6px; line-height:1.6;">5 quality photos</div>
+  <section class="pricing-wrap" id="pricing">
+    <div class="pricing-inner">
+      <p class="section-eyebrow">Packages</p>
+      <h2 class="section-heading">Game day, captured right.</h2>
+      <p class="section-sub">Every package includes professionally edited, high-resolution photos delivered digitally — ready to share or print.</p>
+
+      <div class="pricing-grid">
+        <!-- Package A -->
+        <div class="p-card">
+          <div class="p-card-header">
+            <p class="p-card-name">The Highlight</p>
+            <p class="p-card-price">$50 <span>/ game</span></p>
+          </div>
+          <p class="p-card-desc">5 professionally edited game photos, delivered in high resolution. Perfect for locking in your best moments from the day.</p>
+          <hr class="p-divider">
+          <div>
+            <p class="p-includes-label">Includes</p>
+            <ul class="p-includes-list">
+              <li>5 curated, edited game photos</li>
+              <li>High-res digital delivery</li>
+            </ul>
+          </div>
+          <div class="p-addon">
+            <label>
+              <div class="p-addon-left">
+                <input type="checkbox" id="addon-a">
+                <div>
+                  <p class="p-addon-text">Double exposure edit</p>
+                  <p class="p-addon-text-sub">Applied to 1 photo of your choice</p>
+                </div>
+              </div>
+              <span class="p-addon-price">+$15</span>
+            </label>
+          </div>
+          <button class="book-btn" onclick="bookPackage('The Highlight', 'addon-a', 50)">Book this package →</button>
+        </div>
+
+        <!-- Package B -->
+        <div class="p-card featured">
+          <span class="badge">Most popular</span>
+          <div class="p-card-header">
+            <p class="p-card-name">The Full Story</p>
+            <p class="p-card-price">$90 <span>/ game</span></p>
+          </div>
+          <p class="p-card-desc">10 professionally edited game photos — a complete visual recap of your game day, the way it deserves to be remembered.</p>
+          <hr class="p-divider">
+          <div>
+            <p class="p-includes-label">Includes</p>
+            <ul class="p-includes-list">
+              <li>10 curated, edited game photos</li>
+              <li>High-res digital delivery</li>
+            </ul>
+          </div>
+          <div class="p-addon">
+            <label>
+              <div class="p-addon-left">
+                <input type="checkbox" id="addon-b">
+                <div>
+                  <p class="p-addon-text">Double exposure edit</p>
+                  <p class="p-addon-text-sub">Applied to 1 photo of your choice</p>
+                </div>
+              </div>
+              <span class="p-addon-price">+$15</span>
+            </label>
+          </div>
+          <button class="book-btn primary" onclick="bookPackage('The Full Story', 'addon-b', 90)">Book this package →</button>
+        </div>
       </div>
-      <div style="background:#0a1a2e; border:1.5px solid #f5c842; border-radius:14px; padding:1.8rem 2rem; min-width:180px;">
-        <div style="font-family:'Playfair Display',serif; font-size:32px; font-weight:600; color:#f5c842;">$45</div>
-        <div style="font-size:14px; color:#e3f1ff; margin-top:6px; line-height:1.6;">10 quality photos</div>
-      </div>
-      <div style="background:#0a1a2e; border:1.5px solid rgba(245,200,66,0.5); border-radius:14px; padding:1.8rem 2rem; min-width:180px;">
-        <div style="font-family:'Playfair Display',serif; font-size:32px; font-weight:600; color:#f5c842;">+$10</div>
-        <div style="font-size:14px; color:#e3f1ff; margin-top:6px; line-height:1.6;">Add one double exposure shot to any package</div>
+
+      <p class="pricing-note">Questions? Reach out at <a href="mailto:lauramaddockmd@gmail.com">lauramaddockmd@gmail.com</a></p>
+
+      <!-- Fallback contact modal (shown when mailto: has no handler) -->
+      <div class="modal-overlay" id="bookingModal" onclick="closeBookingModalOnOverlay(event)">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bookingModalTitle">
+          <button class="modal-close" onclick="closeBookingModal()" aria-label="Close">&#x2715;</button>
+
+          <div id="bookingModalForm">
+            <p class="modal-eyebrow">Book a package</p>
+            <p class="modal-title" id="bookingModalTitle">Get in touch</p>
+            <div class="modal-pkg-summary" id="bookingModalSummary"></div>
+            <div class="field">
+              <label for="bm-name">Your name</label>
+              <input type="text" id="bm-name" placeholder="Jane Smith" autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="bm-email">Your email</label>
+              <input type="email" id="bm-email" placeholder="you@email.com" autocomplete="email">
+            </div>
+            <div class="field">
+              <label for="bm-date">Game date (if known)</label>
+              <input type="text" id="bm-date" placeholder="e.g. May 10, 2025">
+            </div>
+            <div class="field">
+              <label for="bm-note">Anything else?</label>
+              <textarea id="bm-note" rows="3" placeholder="Sport, location, or any other details..."></textarea>
+            </div>
+            <button class="modal-submit" id="bookingSubmitBtn" onclick="submitBookingFallback()">Send booking request &#x2192;</button>
+            <div class="modal-error" id="bookingModalError" style="display:none;"></div>
+          </div>
+
+          <div class="modal-success" id="bookingModalSuccess">
+            <div class="modal-success-icon">&#10003;</div>
+            <strong>Request sent!</strong>
+            <p>Your booking request has been sent to Stewarded Shots. You'll hear back shortly at the email you provided.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -487,6 +780,99 @@
   </footer>
 
   <script>
+    // Pricing — booking sends email server-side via /api/send-booking
+    var bookingState = { pkg: '', hasAddon: false, total: 0 };
+
+    function bookPackage(pkg, addonId, base) {
+      var hasAddon = document.getElementById(addonId).checked;
+      var total = base + (hasAddon ? 15 : 0);
+      bookingState = { pkg: pkg, hasAddon: hasAddon, total: total };
+      var addonText = hasAddon ? '<br>+ Double exposure edit (+$15)' : '';
+      document.getElementById('bookingModalTitle').textContent = pkg;
+      document.getElementById('bookingModalSummary').innerHTML =
+        '<strong>' + pkg + '</strong> &mdash; $' + total + addonText;
+      document.getElementById('bookingModalForm').style.display = '';
+      document.getElementById('bookingModalSuccess').style.display = 'none';
+      var errEl = document.getElementById('bookingModalError');
+      if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+      document.getElementById('bm-name').value = '';
+      document.getElementById('bm-email').value = '';
+      document.getElementById('bm-date').value = '';
+      document.getElementById('bm-note').value = '';
+      var btn = document.getElementById('bookingSubmitBtn');
+      if (btn) { btn.disabled = false; btn.textContent = 'Send booking request \u2192'; }
+      document.getElementById('bookingModal').classList.add('open');
+    }
+
+    function closeBookingModal() {
+      document.getElementById('bookingModal').classList.remove('open');
+    }
+
+    function closeBookingModalOnOverlay(e) {
+      if (e.target === document.getElementById('bookingModal')) closeBookingModal();
+    }
+
+    function showBookingError(msg) {
+      var errEl = document.getElementById('bookingModalError');
+      if (!errEl) { alert(msg); return; }
+      errEl.textContent = msg;
+      errEl.style.display = 'block';
+    }
+
+    function submitBookingFallback() {
+      var name = document.getElementById('bm-name').value.trim();
+      var email = document.getElementById('bm-email').value.trim();
+      if (!name || !email) {
+        showBookingError('Please enter your name and email to continue.');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showBookingError('Please enter a valid email address.');
+        return;
+      }
+      var date = document.getElementById('bm-date').value.trim();
+      var note = document.getElementById('bm-note').value.trim();
+      var btn = document.getElementById('bookingSubmitBtn');
+      var errEl = document.getElementById('bookingModalError');
+      if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending\u2026'; }
+
+      fetch('/api/send-booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pkg: bookingState.pkg,
+          hasAddon: bookingState.hasAddon,
+          total: bookingState.total,
+          name: name,
+          email: email,
+          date: date,
+          note: note,
+        }),
+      })
+        .then(function(res) {
+          return res.json().then(function(data) { return { status: res.status, data: data }; });
+        })
+        .then(function(r) {
+          if (r.status >= 200 && r.status < 300) {
+            document.getElementById('bookingModalForm').style.display = 'none';
+            document.getElementById('bookingModalSuccess').style.display = 'block';
+            return;
+          }
+          var msg = (r.data && r.data.error) || 'Sorry, the booking request could not be sent. Please email lauramaddockmd@gmail.com directly.';
+          showBookingError(msg);
+          if (btn) { btn.disabled = false; btn.textContent = 'Send booking request \u2192'; }
+        })
+        .catch(function() {
+          showBookingError('Network error. Please check your connection and try again, or email lauramaddockmd@gmail.com directly.');
+          if (btn) { btn.disabled = false; btn.textContent = 'Send booking request \u2192'; }
+        });
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeBookingModal();
+    });
+
     // Mobile nav toggle
     document.getElementById('navToggle').addEventListener('click', function() {
       document.getElementById('navLinks').classList.toggle('open');
