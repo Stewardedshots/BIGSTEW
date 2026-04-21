@@ -362,6 +362,9 @@
       background: #fff; max-width: 540px;
       box-shadow: 0 4px 24px rgba(42,127,193,0.09);
     }
+    .client-layout { display: flex; align-items: center; gap: 3rem; flex-wrap: wrap; }
+    .client-layout .client-box { flex: 1 1 420px; }
+    .client-side-logo { flex: 1 1 320px; max-width: 520px; height: auto; background: transparent; }
     .client-tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; background: #e3f1ff; padding: 4px; border-radius: 10px; }
     .client-tab {
       flex: 1; padding: 0.6rem; text-align: center;
@@ -677,6 +680,7 @@
     <div class="section-title">Your photos, delivered</div>
     <div class="gold-divider"></div>
     <div class="section-verse">Serving each client with care and excellence.</div>
+    <div class="client-layout">
     <div class="client-box">
       <div class="client-tabs">
         <button class="client-tab active" onclick="switchTab('receive')">Receive Photos</button>
@@ -720,6 +724,8 @@
         <div class="error-msg" id="s-err"></div>
         <div id="send-result" style="display:none; margin-top:1rem;"></div>
       </div>
+    </div>
+      <img class="client-side-logo" src="assets/logo.png" alt="StewardedShots logo" />
     </div>
   </section>
 
