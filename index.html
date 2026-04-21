@@ -183,12 +183,50 @@
       cursor: pointer; transition: all 0.2s; margin-bottom: 1rem;
     }
     .upload-zone:hover { border-color: #2a7fc1; background: #f0f7ff; }
+    .upload-zone.drag-over { border-color: #2a7fc1; background: #e3f0fb; border-style: solid; }
     .upload-zone input { display: none; }
     .upload-icon { font-size: 24px; margin-bottom: 8px; display: block; }
+    .upload-filelist { margin-top: 0.75rem; font-size: 12px; color: #0a1a2e; text-align: left; display: none; }
+    .upload-filelist.has-files { display: block; }
+    .upload-filelist strong { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #5a8aaa; margin-bottom: 4px; }
+    .upload-filelist ul { list-style: none; padding: 0; margin: 0; max-height: 110px; overflow-y: auto; }
+    .upload-filelist li { padding: 2px 0; font-size: 12px; color: #0a1a2e; }
     .success-msg {
       background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 8px;
       padding: 0.8rem 1rem; font-size: 13px; color: #2e7d32; display: none; margin-top: 0.75rem;
     }
+    .error-msg {
+      background: #fde8e8; border: 1px solid #f5a5a5; border-radius: 8px;
+      padding: 0.8rem 1rem; font-size: 13px; color: #c0392b; display: none; margin-top: 0.75rem;
+    }
+    .access-code-box {
+      background: #fff8e1; border: 1.5px solid #f5c842; border-radius: 10px;
+      padding: 1rem 1.2rem; margin-top: 0.75rem; text-align: center;
+    }
+    .access-code-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #8a7020; font-weight: 700; margin-bottom: 6px; }
+    .access-code-value { font-family: 'Playfair Display', serif; font-size: 28px; letter-spacing: 0.22em; font-weight: 600; color: #0a1a2e; }
+    .access-code-hint { font-size: 12px; color: #5a7a9a; margin-top: 8px; line-height: 1.5; }
+    .email-status {
+      margin-top: 10px; font-size: 12px; line-height: 1.5; padding: 8px 10px; border-radius: 6px;
+      background: #eef6ff; border: 1px solid #c8dcf0; color: #2a4a6a; text-align: left;
+    }
+    .email-status[data-state="ok"] { background: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }
+    .email-status[data-state="error"] { background: #fff3cd; border-color: #f5c842; color: #8a6d00; }
+    .code-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .code-actions a, .code-actions button {
+      flex: 1; min-width: 120px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid #b8d8f0; background: #fff; color: #2a7fc1;
+      cursor: pointer; text-decoration: none; display: inline-block; text-align: center; font-family: 'Lato', sans-serif;
+    }
+    .code-actions a:hover, .code-actions button:hover { background: #e3f1ff; }
+    .gallery-download-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 0.75rem; }
+    .gallery-download-item {
+      border: 1px solid #b8d8f0; border-radius: 8px; background: #f5faff; padding: 6px;
+      display: flex; flex-direction: column; gap: 6px; align-items: stretch; text-decoration: none; color: #0a1a2e;
+    }
+    .gallery-download-item img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 5px; background: #e3f1ff; }
+    .gallery-download-item span { font-size: 10px; color: #5a7a9a; word-break: break-all; text-align: center; }
+    .gallery-download-item:hover { border-color: #2a7fc1; }
     .portal-note { margin-top: 1rem; font-size: 12px; color: #5a8aaa; font-style: italic; line-height: 1.6; }
 
     /* ── ABOUT STRIP ── */
@@ -355,34 +393,39 @@
       <div class="tab-panel active" id="tab-receive">
         <div class="form-group">
           <label class="form-label">Access code</label>
-          <input class="form-input" type="text" placeholder="Enter the code from your photographer" />
+          <input class="form-input" id="receive-code" type="text" placeholder="Enter the code from your photographer" autocomplete="off" />
+          <small style="display:block;margin-top:4px;font-size:11px;color:#5a8aaa;">Check your email — your photographer's access code was sent to the address below.</small>
         </div>
         <div class="form-group">
           <label class="form-label">Your email</label>
-          <input class="form-input" type="email" placeholder="you@email.com" />
+          <input class="form-input" id="receive-email" type="email" placeholder="you@email.com" autocomplete="email" />
         </div>
-        <button class="btn-blue" onclick="showMsg('r-msg')">Access My Gallery</button>
-        <div class="success-msg" id="r-msg">✓ Gallery link sent to your email!</div>
-        <p class="portal-note">To make this fully functional, connect a backend service like <strong>Pixieset</strong>, <strong>Pic-Time</strong>, or <strong>Google Drive</strong>. Ask your web developer or reach out for help!</p>
+        <button class="btn-blue" id="receive-btn" onclick="receivePhotos()">Access My Gallery</button>
+        <div class="success-msg" id="r-msg"></div>
+        <div class="error-msg" id="r-err"></div>
+        <div id="gallery-results" style="display:none; margin-top:1rem;"></div>
       </div>
 
       <div class="tab-panel" id="tab-send">
         <div class="form-group">
           <label class="form-label">Client name</label>
-          <input class="form-input" type="text" placeholder="Client full name" />
+          <input class="form-input" id="send-name" type="text" placeholder="Client full name" />
         </div>
         <div class="form-group">
           <label class="form-label">Client email</label>
-          <input class="form-input" type="email" placeholder="client@email.com" />
+          <input class="form-input" id="send-email" type="email" placeholder="client@email.com" />
         </div>
-        <div class="upload-zone" onclick="document.getElementById('file-upload').click()">
+        <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-upload').click()">
           <span class="upload-icon">⬆</span>
           <strong style="font-size:13px;display:block;margin-bottom:4px;color:#0a1a2e;">Drop photos here or click to upload</strong>
-          <span style="font-size:11px;color:#5a8aaa;">JPG, PNG, RAW — up to 500MB per batch</span>
+          <span style="font-size:11px;color:#5a8aaa;">JPG, PNG — up to ~6MB per photo</span>
           <input type="file" id="file-upload" multiple accept="image/*" style="display:none" />
+          <div class="upload-filelist" id="upload-filelist"></div>
         </div>
-        <button class="btn-yellow" style="width:100%;" onclick="showMsg('s-msg')">Send to Client</button>
-        <div class="success-msg" id="s-msg">✓ Gallery link sent! Your client will receive an email shortly.</div>
+        <button class="btn-yellow" id="send-btn" style="width:100%;" onclick="sendPhotos()">Send to Client</button>
+        <div class="success-msg" id="s-msg"></div>
+        <div class="error-msg" id="s-err"></div>
+        <div id="send-result" style="display:none; margin-top:1rem;"></div>
       </div>
     </div>
   </section>
@@ -525,6 +568,317 @@
       el.style.display = 'block';
       setTimeout(function() { el.style.display = 'none'; }, 4000);
     }
+    // Drag-and-drop photo upload
+    (function() {
+      var zone = document.getElementById('upload-zone');
+      var input = document.getElementById('file-upload');
+      var list = document.getElementById('upload-filelist');
+      if (!zone || !input || !list) return;
+
+      function renderFiles(files) {
+        if (!files || !files.length) {
+          list.className = 'upload-filelist';
+          list.innerHTML = '';
+          return;
+        }
+        var items = '';
+        var total = 0;
+        for (var i = 0; i < files.length; i++) {
+          var f = files[i];
+          total += f.size;
+          items += '<li>' + f.name.replace(/[<>&]/g, '') + '</li>';
+        }
+        var mb = (total / (1024 * 1024)).toFixed(1);
+        list.className = 'upload-filelist has-files';
+        list.innerHTML = '<strong>' + files.length + ' file' + (files.length === 1 ? '' : 's') + ' ready (' + mb + ' MB)</strong><ul>' + items + '</ul>';
+      }
+
+      function setFiles(fileList) {
+        try {
+          var dt = new DataTransfer();
+          for (var i = 0; i < fileList.length; i++) {
+            if (fileList[i].type && fileList[i].type.indexOf('image/') !== 0) continue;
+            dt.items.add(fileList[i]);
+          }
+          input.files = dt.files;
+        } catch (err) {
+          // DataTransfer not supported — still show the list so user gets feedback.
+        }
+        renderFiles(input.files && input.files.length ? input.files : fileList);
+      }
+
+      ['dragenter', 'dragover'].forEach(function(ev) {
+        zone.addEventListener(ev, function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.add('drag-over');
+        });
+      });
+      ['dragleave', 'dragend'].forEach(function(ev) {
+        zone.addEventListener(ev, function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (ev === 'dragleave' && zone.contains(e.relatedTarget)) return;
+          zone.classList.remove('drag-over');
+        });
+      });
+      zone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        zone.classList.remove('drag-over');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+          setFiles(e.dataTransfer.files);
+        }
+      });
+      // Prevent the browser from navigating if a file is dropped outside the zone.
+      ['dragover', 'drop'].forEach(function(ev) {
+        window.addEventListener(ev, function(e) {
+          if (!zone.contains(e.target)) e.preventDefault();
+        });
+      });
+      input.addEventListener('change', function() {
+        renderFiles(input.files);
+      });
+    })();
+
+    // Resize/recompress images in the browser so each upload fits inside Netlify's
+    // 6MB synchronous function payload cap. Originals that are already small pass through untouched.
+    async function prepareFile(file, targetBytes) {
+      if (!file || !file.type || file.type.indexOf('image/') !== 0) return file;
+      if (file.size <= targetBytes) return file;
+      if (typeof createImageBitmap !== 'function') return file;
+      var bmp;
+      try { bmp = await createImageBitmap(file); }
+      catch (e) { return file; }
+      var w = bmp.width, h = bmp.height;
+      var scale = Math.min(1, 3200 / Math.max(w, h));
+      w = Math.max(1, Math.round(w * scale));
+      h = Math.max(1, Math.round(h * scale));
+      var qualities = [0.92, 0.85, 0.78, 0.7, 0.6, 0.5];
+      var lastBlob = null;
+      for (var i = 0; i < qualities.length; i++) {
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(bmp, 0, 0, w, h);
+        var blob = await new Promise(function(resolve) {
+          canvas.toBlob(function(b) { resolve(b); }, 'image/jpeg', qualities[i]);
+        });
+        if (!blob) continue;
+        lastBlob = blob;
+        if (blob.size <= targetBytes) break;
+        w = Math.max(1, Math.round(w * 0.85));
+        h = Math.max(1, Math.round(h * 0.85));
+      }
+      if (!lastBlob) return file;
+      var baseName = (file.name || 'photo').replace(/\.[^.]+$/, '');
+      return new File([lastBlob], baseName + '.jpg', { type: 'image/jpeg', lastModified: Date.now() });
+    }
+
+    // Send photos to client — uploads sequentially (one file per request to stay under the 6MB function payload limit).
+    async function sendPhotos() {
+      var name = (document.getElementById('send-name').value || '').trim();
+      var email = (document.getElementById('send-email').value || '').trim();
+      var input = document.getElementById('file-upload');
+      var files = input.files;
+      var btn = document.getElementById('send-btn');
+      var msg = document.getElementById('s-msg');
+      var err = document.getElementById('s-err');
+      var result = document.getElementById('send-result');
+
+      msg.style.display = 'none';
+      err.style.display = 'none';
+      result.style.display = 'none';
+
+      if (!name) return showErr(err, 'Please enter the client name.');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showErr(err, 'Please enter a valid client email.');
+      if (!files || !files.length) return showErr(err, 'Attach at least one photo before sending.');
+
+      btn.disabled = true;
+      var originalLabel = btn.textContent;
+
+      var code = '';
+      var totalFiles = files.length;
+      var uploadLimit = 5 * 1024 * 1024; // leave ~1MB headroom under the 6MB function cap
+      try {
+        for (var i = 0; i < totalFiles; i++) {
+          btn.textContent = 'Preparing ' + (i + 1) + ' / ' + totalFiles + '…';
+          var toSend = await prepareFile(files[i], uploadLimit);
+          btn.textContent = 'Sending ' + (i + 1) + ' / ' + totalFiles + '…';
+          var fd = new FormData();
+          if (code) {
+            fd.append('code', code);
+          } else {
+            fd.append('clientName', name);
+            fd.append('clientEmail', email);
+          }
+          fd.append('files', toSend, toSend.name || files[i].name);
+          var res = await fetch('/api/send-photos', { method: 'POST', body: fd });
+          var data = await res.json().catch(function() { return null; });
+          if (!res.ok || !data || !data.ok) {
+            var detail = (data && data.error) ? data.error : 'Upload failed on "' + files[i].name + '".';
+            if (res.status === 413) detail = '"' + files[i].name + '" is too large even after resizing. Please send a smaller version.';
+            throw new Error(detail);
+          }
+          code = data.code;
+        }
+        renderSendResult(result, { code: code, fileCount: totalFiles, clientName: name }, email);
+        msg.textContent = '✓ ' + totalFiles + ' photo' + (totalFiles === 1 ? '' : 's') + ' uploaded. Sending access code to ' + email + '…';
+        msg.style.display = 'block';
+        await deliverClientEmail(code, email, msg, err);
+      } catch (e) {
+        showErr(err, e.message || 'Something went wrong while sending.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      }
+    }
+
+    function renderSendResult(container, data, email) {
+      var code = (data.code || '').toUpperCase();
+      var subject = encodeURIComponent('Your StewardedShots gallery is ready');
+      var body = encodeURIComponent(
+        'Hi ' + (data.clientName || '') + ',\n\n' +
+        'Your photos are ready! Use this access code to view and download them on the StewardedShots Client Portal:\n\n' +
+        'Access code: ' + code + '\n' +
+        'Email: ' + email + '\n\n' +
+        'Open the Receive Photos tab on StewardedShots.com and enter the code with this email address.\n\n' +
+        'Blessings,\nStewardedShots'
+      );
+      container.innerHTML =
+        '<div class="access-code-box">' +
+          '<div class="access-code-label">Client Access Code</div>' +
+          '<div class="access-code-value" id="generated-code">' + code + '</div>' +
+          '<div class="access-code-hint">' + data.fileCount + ' photo' + (data.fileCount === 1 ? '' : 's') + ' uploaded for <strong>' + escapeHtml(email) + '</strong>. We\'re emailing this code to your client now.</div>' +
+          '<div class="email-status" id="email-status" data-state="pending">Sending email…</div>' +
+          '<div class="code-actions">' +
+            '<button type="button" id="resend-email-btn" onclick="resendClientEmail(\'' + code + '\', \'' + escapeHtml(email) + '\')" style="display:none;">Resend email</button>' +
+            '<a href="mailto:' + encodeURIComponent(email) + '?subject=' + subject + '&body=' + body + '">Email manually</a>' +
+            '<button type="button" onclick="copyCode(\'' + code + '\', this)">Copy code</button>' +
+          '</div>' +
+        '</div>';
+      container.style.display = 'block';
+    }
+
+    async function deliverClientEmail(code, email, msg, err) {
+      var status = document.getElementById('email-status');
+      var resendBtn = document.getElementById('resend-email-btn');
+      if (status) { status.textContent = 'Sending email to ' + email + '…'; status.setAttribute('data-state', 'pending'); }
+      try {
+        var res = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code })
+        });
+        var data = await res.json().catch(function() { return null; });
+        if (!res.ok || !data || !data.ok) {
+          var reason = (data && data.error) ? data.error : 'Email failed to send.';
+          if (status) { status.textContent = '⚠ ' + reason + ' You can still share the code manually below.'; status.setAttribute('data-state', 'error'); }
+          if (resendBtn) resendBtn.style.display = 'inline-block';
+          if (msg) { msg.textContent = '✓ Photos uploaded. Email could not be sent automatically — share the code below.'; msg.style.display = 'block'; }
+          return false;
+        }
+        if (status) { status.textContent = '✓ Access code emailed to ' + email + '. The code is shown below as a backup.'; status.setAttribute('data-state', 'ok'); }
+        if (resendBtn) { resendBtn.style.display = 'inline-block'; resendBtn.textContent = 'Resend email'; }
+        if (msg) { msg.textContent = '✓ Photos uploaded and access code emailed to ' + email + '.'; msg.style.display = 'block'; }
+        return true;
+      } catch (e) {
+        if (status) { status.textContent = '⚠ Email failed: ' + (e.message || 'network error') + '. Share the code manually below.'; status.setAttribute('data-state', 'error'); }
+        if (resendBtn) resendBtn.style.display = 'inline-block';
+        return false;
+      }
+    }
+
+    async function resendClientEmail(code, email) {
+      var btn = document.getElementById('resend-email-btn');
+      if (!btn) return;
+      var original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      await deliverClientEmail(code, email, null, null);
+      btn.disabled = false;
+      if (btn.textContent === 'Sending…') btn.textContent = original;
+    }
+
+    function copyCode(code, btn) {
+      var label = btn.textContent;
+      var done = function() { btn.textContent = 'Copied!'; setTimeout(function() { btn.textContent = label; }, 1800); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done, function() { window.prompt('Copy this code:', code); });
+      } else {
+        window.prompt('Copy this code:', code);
+      }
+    }
+
+    // Receive photos — looks up the gallery by code + email.
+    async function receivePhotos() {
+      var code = (document.getElementById('receive-code').value || '').trim().toUpperCase();
+      var email = (document.getElementById('receive-email').value || '').trim();
+      var btn = document.getElementById('receive-btn');
+      var msg = document.getElementById('r-msg');
+      var err = document.getElementById('r-err');
+      var results = document.getElementById('gallery-results');
+
+      msg.style.display = 'none';
+      err.style.display = 'none';
+      results.style.display = 'none';
+      results.innerHTML = '';
+
+      if (!code) return showErr(err, 'Please enter the access code from your photographer.');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showErr(err, 'Please enter the email your photographer sent the code to.');
+
+      btn.disabled = true;
+      var originalLabel = btn.textContent;
+      btn.textContent = 'Loading…';
+
+      try {
+        var res = await fetch('/api/receive-photos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code, email: email })
+        });
+        var data = await res.json().catch(function() { return null; });
+        if (!res.ok || !data || !data.ok) {
+          throw new Error((data && data.error) || 'We couldn\'t load that gallery. Please try again.');
+        }
+        renderGallery(results, data);
+        msg.textContent = '✓ ' + data.photos.length + ' photo' + (data.photos.length === 1 ? '' : 's') + ' ready to download.';
+        msg.style.display = 'block';
+      } catch (e) {
+        showErr(err, e.message || 'Something went wrong.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      }
+    }
+
+    function renderGallery(container, data) {
+      var items = data.photos.map(function(p) {
+        var isImage = (p.type || '').indexOf('image/') === 0;
+        var safeUrl = escapeHtml(p.url);
+        var thumb = isImage
+          ? '<img src="' + safeUrl + '" alt="' + escapeHtml(p.name) + '" loading="lazy" />'
+          : '<div style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#e3f1ff;border-radius:5px;color:#5a7a9a;font-size:10px;">FILE</div>';
+        return '<a class="gallery-download-item" href="' + safeUrl + '" download="' + escapeHtml(p.name) + '" rel="noopener">' +
+               thumb + '<span>' + escapeHtml(p.name) + '</span></a>';
+      }).join('');
+      container.innerHTML =
+        '<div style="font-size:13px;color:#0a1a2e;margin-bottom:6px;"><strong>' + escapeHtml(data.clientName || 'Your gallery') + '</strong> — click any photo to download.</div>' +
+        '<div class="gallery-download-grid">' + items + '</div>';
+      container.style.display = 'block';
+    }
+
+    function showErr(el, text) {
+      el.textContent = text;
+      el.style.display = 'block';
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function(c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
     // Smooth scroll polyfill for older browsers
     document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
       anchor.addEventListener('click', function(e) {
