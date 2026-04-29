@@ -553,65 +553,67 @@
       <p class="section-sub">Every package includes professionally edited, high-resolution photos delivered digitally — ready to share or print.</p>
 
       <div class="pricing-grid">
-        <!-- Package A -->
+        <!-- Game Pass -->
         <div class="p-card">
           <div class="p-card-header">
-            <p class="p-card-name">The Highlight</p>
-            <p class="p-card-price">$30 <span>/ game</span></p>
+            <p class="p-card-name">Game Pass</p>
+            <p class="p-card-price">$27 <span>/ game</span></p>
           </div>
-          <p class="p-card-desc">5 professionally edited game photos, delivered in high resolution. Perfect for locking in your best moments from the day.</p>
+          <p class="p-card-desc">For one game. Every photo of your athlete from a single game day, edited and ready to share.</p>
           <hr class="p-divider">
           <div>
             <p class="p-includes-label">Includes</p>
             <ul class="p-includes-list">
-              <li>5 curated, edited game photos</li>
-              <li>High-res digital delivery</li>
+              <li>Every photo of your athlete from one game</li>
+              <li>Typically 10–20 edited shots</li>
+              <li>High-resolution digital delivery</li>
+              <li>Gallery delivered in 7 days</li>
+              <li>Print and share ready</li>
             </ul>
           </div>
-          <div class="p-addon">
-            <label>
-              <div class="p-addon-left">
-                <input type="checkbox" id="addon-a">
-                <div>
-                  <p class="p-addon-text">Double exposure edit</p>
-                  <p class="p-addon-text-sub">Applied to 1 photo of your choice</p>
-                </div>
-              </div>
-              <span class="p-addon-price">+$15</span>
-            </label>
-          </div>
-          <button class="book-btn" onclick="bookPackage('The Highlight', 'addon-a', 30)">Book this package →</button>
+          <button class="book-btn" onclick="bookPackage('Game Pass', null, 27)">Book this package →</button>
         </div>
 
-        <!-- Package B -->
+        <!-- Season Pass -->
         <div class="p-card featured">
           <span class="badge">Most popular</span>
           <div class="p-card-header">
-            <p class="p-card-name">The Full Story</p>
-            <p class="p-card-price">$50 <span>/ game</span></p>
+            <p class="p-card-name">Season Pass</p>
+            <p class="p-card-price">$179 <span>/ season</span></p>
           </div>
-          <p class="p-card-desc">10 professionally edited game photos — a complete visual recap of your game day, the way it deserves to be remembered.</p>
+          <p class="p-card-desc">For the full ride. Every game, every moment — the complete season captured.</p>
           <hr class="p-divider">
           <div>
             <p class="p-includes-label">Includes</p>
             <ul class="p-includes-list">
-              <li>10 curated, edited game photos</li>
-              <li>High-res digital delivery</li>
+              <li>Every photo of your athlete, every game</li>
+              <li>Unlimited high-resolution downloads</li>
+              <li>Priority editing and delivery</li>
+              <li>Year-end highlight gallery</li>
+              <li>Best value per game</li>
             </ul>
           </div>
-          <div class="p-addon">
-            <label>
-              <div class="p-addon-left">
-                <input type="checkbox" id="addon-b">
-                <div>
-                  <p class="p-addon-text">Double exposure edit</p>
-                  <p class="p-addon-text-sub">Applied to 1 photo of your choice</p>
-                </div>
-              </div>
-              <span class="p-addon-price">+$15</span>
-            </label>
+          <button class="book-btn primary" onclick="bookPackage('Season Pass', null, 179)">Book this package →</button>
+        </div>
+
+        <!-- VIP -->
+        <div class="p-card">
+          <div class="p-card-header">
+            <p class="p-card-name">VIP</p>
+            <p class="p-card-price">$349 <span>/ season</span></p>
           </div>
-          <button class="book-btn primary" onclick="bookPackage('The Full Story', 'addon-b', 50)">Book this package →</button>
+          <p class="p-card-desc">For the keepsake. The Season Pass plus premium extras to remember the year by.</p>
+          <hr class="p-divider">
+          <div>
+            <p class="p-includes-label">Includes</p>
+            <ul class="p-includes-list">
+              <li>Everything in the Season Pass</li>
+              <li>Custom 90-second highlight reel</li>
+              <li>2 premium double-exposure edits</li>
+              <li>1 framed 8x10 print, shipped to your door</li>
+            </ul>
+          </div>
+          <button class="book-btn" onclick="bookPackage('VIP', null, 349)">Book this package →</button>
         </div>
       </div>
 
@@ -790,7 +792,8 @@
     var bookingState = { pkg: '', hasAddon: false, total: 0 };
 
     function bookPackage(pkg, addonId, base) {
-      var hasAddon = document.getElementById(addonId).checked;
+      var addonEl = addonId ? document.getElementById(addonId) : null;
+      var hasAddon = !!(addonEl && addonEl.checked);
       var total = base + (hasAddon ? 15 : 0);
       bookingState = { pkg: pkg, hasAddon: hasAddon, total: total };
       var addonText = hasAddon ? '<br>+ Double exposure edit (+$15)' : '';
